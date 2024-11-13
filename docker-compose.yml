@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - server
+
+  server:
+    container_name: strapi
+    build: ./server
+    image: strapi:latest
+    restart: unless-stopped
+    env_file: ./server/.env
+    environment:
+      DATABASE_CLIENT: "${DATABASE_CLIENT}"
+      DATABASE_USERNAME: "${DATABASE_USERNAME}"
+      DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+      JWT_SECRET: "${JWT_SECRET}"
+      ADMIN_JWT_SECRET: "${ADMIN_JWT_SECRET}"
+      APP_KEYS: "${APP_KEYS}"
+      NODE_ENV: "development"
+    volumes:
+      - ./server/config:/opt/app/config
+      - ./server/src:/opt/app/src
+      - ./server/package.json:/opt/package.json
+      - ./server/package-lock.json:/opt/package-lock.json
+      - ./server/.env:/opt/app/.env
+      - ./server/public/uploads:/opt/app/public/uploads
+    ports:
+      - "1337:1337"
+    networks:
+      - strapi
+
+volumes:
+  strapi-data:
+
+networks:
+  strapi:
+    name: Strapi
+    driver: bridge
