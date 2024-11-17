@@ -34,7 +34,7 @@ async function onSubmit(values) {
 
 <template>
   <div class="w-full flex justify-center bg-gray-800 min-h-screen">
-    <div class="mt-40 w-1/2">
+    <div class="mt-40 sm:w-1/2 w-full sm:mx-0 mx-6">
       <Form
         :validation-schema="schema"
         @submit="onSubmit"
