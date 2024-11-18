@@ -7,14 +7,24 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@nuxt/ui": "^2.19.2",
+    "@prisma/nuxt": "^0.0.35",
     "@vee-validate/nuxt": "^4.14.7",
+    "@vee-validate/yup": "^4.14.7",
     "nuxt": "^3.14.159",
     "vue": "latest",
     "vue-router": "latest",
     "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@prisma/client": "^5.22.0",
+    "prisma": "^5.22.0"
   }
 }
