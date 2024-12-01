@@ -12,6 +12,6 @@ export default defineNuxtConfig({
     provider: {
       type: "authjs",
     },
-    baseURL: `http://localhost:3000`,
+    baseURL: process.env.BASE_URL,
   },
 });
