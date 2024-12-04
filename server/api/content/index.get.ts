@@ -1,4 +1,4 @@
-import prisma from "~/lib/prisma";
+import prisma from "../../data/prismaClient";
 import { getToken } from "#auth";
 
 export default defineEventHandler(async (event) => {

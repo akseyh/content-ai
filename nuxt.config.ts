@@ -8,6 +8,9 @@ export default defineNuxtConfig({
     "@prisma/nuxt",
     "@sidebase/nuxt-auth",
   ],
+  build: {
+    transpile: ["@prisma/client"],
+  },
   auth: {
     provider: {
       type: "authjs",
