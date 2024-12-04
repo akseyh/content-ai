@@ -1,5 +1,7 @@
-import prisma from "../../data/prismaClient";
 import { getToken } from "#auth";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const token = await getToken({ event });
