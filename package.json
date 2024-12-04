@@ -21,8 +21,6 @@
     "nuxt": "^3.14.159",
     "vue": "latest",
     "vue-router": "latest",
-    "yup": "^1.4.0",
-    "@prisma/client": "^5.15.0",
-    "prisma": "^5.15.0"
+    "yup": "^1.4.0"
   }
 }

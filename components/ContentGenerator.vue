@@ -61,9 +61,8 @@ async function onSubmit(values: any) {
     <ContentCard
       class="mt-6"
       v-else-if="content"
-      :date="content.createdAt"
-      :subject="content.subject"
-      :text="content.text"
+      :date="new Date()"
+      :text="content"
     />
   </div>
 </template>
