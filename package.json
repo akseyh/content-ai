@@ -7,11 +7,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "db:migrate": "prisma migrate dev",
-    "db:generate": "prisma generate",
-    "db:deploy": "prisma migrate deploy",
-    "db:studio": "prisma studio"
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@nuxt/ui": "^2.19.2",
