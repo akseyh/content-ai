@@ -10,5 +10,14 @@ export async function generateContent(prompt: string) {
     },
   });
 
-  return response;
+  const content = await $fetch("/api/content", {
+    method: "POST",
+    body: {
+      subject: prompt,
+      text: response,
+      owner: sub,
+    },
+  });
+
+  return content;
 }

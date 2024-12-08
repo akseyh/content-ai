@@ -29,6 +29,9 @@ export default defineEventHandler(async (event) => {
 
     return response.candidates[0].content.parts[0].text;
   } catch (error) {
-    throw error;
+    throw createError({
+      statusCode: 500,
+      message: "Content oluşturulurken bir hata oluştu",
+    });
   }
 });
