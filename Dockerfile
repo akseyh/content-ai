@@ -13,9 +13,6 @@ RUN npm install
 # Proje dosyalarını kopyala
 COPY . .
 
-# Uygulamayı build et
-RUN npm run build
-
 # Port ayarı
 ENV HOST=0.0.0.0
 ENV PORT=3000
@@ -23,4 +20,4 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Başlangıç komutu
-CMD ["node", ".output/server/index.mjs"]
+CMD ["npm", "run", "dev"]
