@@ -1,9 +1,9 @@
-import { getToken } from "#auth";
+import { getServerSession } from "#auth";
 
 export default defineEventHandler(async (event) => {
-  const token = await getToken({ event });
+  const session = await getServerSession(event);
 
-  if (!token) return "Not authorized";
+  if (!session) return "Not authorized";
 
   return [];
 });
