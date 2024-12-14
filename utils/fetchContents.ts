@@ -1,7 +1,7 @@
+import type { Content } from "@prisma/client";
+
 export async function fetchContents() {
-  const contents = await $fetch<
-    { subject: string; text: string; image: string; createdAt: Date }[]
-  >("/api/content");
+  const contents = await $fetch<Content[]>("/api/content");
 
   if (!contents) return [];
 

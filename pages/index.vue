@@ -12,5 +12,5 @@ definePageMeta({
     </div>
   </div>
 
-  <ContentHistory :contents="[{ subject: 'hello', text: 'hello' }]" />
+  <ContentHistory />
 </template>

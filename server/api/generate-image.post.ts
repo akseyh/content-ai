@@ -1,6 +1,15 @@
+import { getToken } from "#auth";
 import OpenAI from "openai";
 
 export default defineEventHandler(async (event) => {
+  const token = await getToken({ event });
+  if (!token?.sub) {
+    throw createError({
+      statusCode: 401,
+      message: "Yetkilendirme gerekli",
+    });
+  }
+
   const body = await readBody(event);
 
   const openai = new OpenAI({

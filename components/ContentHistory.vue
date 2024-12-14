@@ -1,9 +1,8 @@
 <script setup lang="ts">
+import type { Content } from "@prisma/client";
 import ContentCard from "./ContentCard.vue";
 
-const contents = ref<
-  { subject: string; text: string; image: string; createdAt: Date }[]
->([]);
+const contents = ref<Content[]>([]);
 
 const isHistoryOpen = ref(false);
 
@@ -68,7 +67,7 @@ const toggleHistory = async () => {
         <ContentCard
           v-for="(content, idx) in contents"
           :key="idx"
-          :date="content.createdAt"
+          :date="content.createdDate"
           :subject="content.subject"
           :text="content.text"
           :image="content.image"

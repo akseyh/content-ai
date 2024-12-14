@@ -31,7 +31,7 @@ defineProps<{
       v-if="image"
       :src="image"
       :alt="subject"
-      class="w-full h-64 object-cover rounded-lg mb-4"
+      class="w-full object-cover rounded-lg mb-4"
     />
 
     <div
