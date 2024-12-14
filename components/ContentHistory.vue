@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import ContentCard from "./ContentCard.vue";
 
-const contents = ref<{ subject: string; text: string; createdAt: Date }[]>([]);
+const contents = ref<
+  { subject: string; text: string; image: string; createdAt: Date }[]
+>([]);
 
 const isHistoryOpen = ref(false);
 
@@ -69,6 +71,7 @@ const toggleHistory = async () => {
           :date="content.createdAt"
           :subject="content.subject"
           :text="content.text"
+          :image="content.image"
         />
       </div>
     </div>

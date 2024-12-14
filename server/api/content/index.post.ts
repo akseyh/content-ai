@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
       data: {
         subject: body.subject,
         text: body.text,
+        image: body.image,
         owner: token.sub,
       },
     });

@@ -2,6 +2,7 @@
 defineProps<{
   subject: string;
   text: string;
+  image: string;
   date: Date;
 }>();
 </script>
@@ -22,7 +23,16 @@ defineProps<{
       </div>
     </div>
 
+    <h3 class="text-xl font-semibold mb-2 text-gray-900">{{ subject }}</h3>
+
     <p class="text-lg mb-4 text-gray-800">{{ text }}</p>
+
+    <img
+      v-if="image"
+      :src="image"
+      :alt="subject"
+      class="w-full h-64 object-cover rounded-lg mb-4"
+    />
 
     <div
       class="flex items-center justify-between pt-4 border-t border-gray-100"

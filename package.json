@@ -19,6 +19,7 @@
     "@vee-validate/nuxt": "^4.14.7",
     "@vee-validate/yup": "^4.14.7",
     "nuxt": "^3.14.159",
+    "openai": "^4.76.3",
     "prisma": "^6.0.1",
     "vue": "latest",
     "vue-router": "latest",

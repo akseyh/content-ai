@@ -3,7 +3,14 @@ export async function generateContent(prompt: string) {
 
   if (!sub) throw new Error("Not authenticated");
 
-  const response = await $fetch("/api/generate-content", {
+  const text = await $fetch("/api/generate-text", {
+    method: "POST",
+    body: {
+      input: prompt,
+    },
+  });
+
+  const image = await $fetch("/api/generate-image", {
     method: "POST",
     body: {
       input: prompt,
@@ -14,7 +21,8 @@ export async function generateContent(prompt: string) {
     method: "POST",
     body: {
       subject: prompt,
-      text: response,
+      text,
+      image,
       owner: sub,
     },
   });

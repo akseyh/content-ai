@@ -64,6 +64,7 @@ async function onSubmit(values: any) {
       :date="content.createdAt"
       :text="content.text"
       :subject="content.subject"
+      :image="content.image"
     />
   </div>
 </template>
