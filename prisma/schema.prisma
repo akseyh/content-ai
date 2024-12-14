@@ -19,6 +19,6 @@ model Content {
   subject     String
   text        String
   owner       String
-  image       String
+  image       String?
   createdDate DateTime @default(now())
 }
