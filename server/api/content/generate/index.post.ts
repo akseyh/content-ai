@@ -1,4 +1,7 @@
-import { getToken } from "#auth";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { DallEAPIWrapper } from "@langchain/openai";
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { z } from "zod";
 
 const PROMPT = `
   Sen bir yapay zeka sosyal medya içerik üreticisisin. 
@@ -33,47 +36,37 @@ const PROMPT = `
 `;
 
 export default defineEventHandler(async (event) => {
-  const token = await getToken({ event });
-  if (!token?.sub) {
-    throw createError({
-      statusCode: 401,
-      message: "Unauthorized",
-    });
-  }
-
   const body = await readBody(event);
 
-  try {
-    const response = await $fetch<{
-      candidates: [{ content: { parts: [{ text: string }] } }];
-    }>(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        body: {
-          contents: [
-            {
-              parts: [
-                {
-                  text: PROMPT,
-                },
-                { text: `Konu: ${body.input}` },
-              ],
-            },
-          ],
-        },
-      }
-    );
+  const geminiModel = new ChatGoogleGenerativeAI({
+    modelName: "gemini-1.5-flash-latest",
+    maxOutputTokens: 2048,
+    apiKey: process.env.GEMINI_API_KEY,
+  });
+  const dalleModel = new DallEAPIWrapper({
+    model: "dall-e-3",
+    size: "1024x1024",
+    apiKey: process.env.OPENAI_API_KEY,
+  });
 
-    if (!response?.candidates?.[0]?.content?.parts?.[0]?.text) {
-      throw new Error();
-    }
+  const geminiResponseFormatter = z.object({
+    text: z.string(),
+    imagePrompt: z.string(),
+  });
 
-    return response.candidates[0].content.parts[0].text;
-  } catch (error) {
-    throw createError({
-      statusCode: 500,
-      message: "Content could not generated",
-    });
-  }
+  const geminiModelWithStructured = geminiModel.withStructuredOutput(
+    geminiResponseFormatter
+  );
+
+  const geminiResponse = (await geminiModelWithStructured.invoke([
+    new SystemMessage(PROMPT),
+    new HumanMessage(body.content),
+  ])) as { text: string; imagePrompt: string };
+
+  const dalleResponse = await dalleModel.invoke(geminiResponse.imagePrompt);
+
+  return {
+    text: geminiResponse.text,
+    imageUrl: dalleResponse,
+  };
 });
