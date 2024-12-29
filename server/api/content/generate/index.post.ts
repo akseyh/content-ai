@@ -65,8 +65,11 @@ export default defineEventHandler(async (event) => {
 
   const dalleResponse = await dalleModel.invoke(geminiResponse.imagePrompt);
 
+  const fileName = `image-${Date.now()}.png`;
+  const imageUrl = await saveImage(dalleResponse, fileName);
+
   return {
     text: geminiResponse.text,
-    imageUrl: dalleResponse,
+    imageUrl,
   };
 });
