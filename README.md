@@ -1,75 +1,21 @@
-# Nuxt Minimal Starter
+# AI Sosyal Medya İçerik Üretici
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Bu proje, yapay zeka teknolojilerini kullanarak sosyal medya içerikleri ve görselleri otomatik olarak üreten bir web uygulamasıdır.
 
-## Setup
+## 🚀 Özellikler
 
-Make sure to install dependencies:
+- 📝 Google Gemini AI ile sosyal medya metinleri üretimi
+- 🎨 DALL·E 3 ile özel görseller oluşturma
+- 💡 Akıllı hashtag önerileri
+- 🔄 Çoklu platform uyumluluğu (Twitter, Instagram, Facebook, LinkedIn)
 
-```bash
-# npm
-npm install
+## 🛠️ Teknolojiler
 
-# pnpm
-pnpm install
+- [Nuxt.js](https://nuxt.com/)
+- [LangChain](https://js.langchain.com/)
+- [Google Gemini AI](https://ai.google.dev/)
+- [DALL·E 3](https://openai.com/dall-e-3)
 
-# yarn
-yarn install
+## ⚙️ Kurulum
 
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+1. Projeyi klonlayın:

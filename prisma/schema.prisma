@@ -22,3 +22,36 @@ model Content {
   image       String?
   createdDate DateTime @default(now())
 }
+
+model UserProfile {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  industry         String?
+  targetAudience   String?
+  tone             String?
+  brandPersonality String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model ContentExample {
+  id          String   @id @default(uuid())
+  userId      String
+  topic       String?
+  content     String?
+  performance String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum EmojiUsage {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum ContentLength {
+  SHORT
+  MEDIUM
+  LONG
+}
