@@ -13,7 +13,8 @@
     "prisma:push": "npx prisma db push"
   },
   "dependencies": {
-    "@langchain/core": "^0.3.26",
+    "@langchain/community": "^0.3.22",
+    "@langchain/core": "^0.3.27",
     "@langchain/google-genai": "^0.1.6",
     "@langchain/openai": "^0.3.16",
     "@nuxt/ui": "^2.19.2",
@@ -21,7 +22,8 @@
     "@sidebase/nuxt-auth": "^0.9.4",
     "@vee-validate/nuxt": "^4.14.7",
     "@vee-validate/yup": "^4.14.7",
-    "langchain": "^0.3.7",
+    "cheerio": "^1.0.0",
+    "langchain": "^0.3.9",
     "nuxt": "^3.14.159",
     "openai": "^4.76.3",
     "prisma": "^6.0.1",

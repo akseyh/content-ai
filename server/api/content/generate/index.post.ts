@@ -1,14 +1,23 @@
 import { getToken } from "#auth";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import {
+  ChatGoogleGenerativeAI,
+  GoogleGenerativeAIEmbeddings,
+} from "@langchain/google-genai";
 import { DallEAPIWrapper } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { z } from "zod";
 import { UserProfile } from "@prisma/client";
+import { CheerioWebBaseLoader } from "@langchain/community/document_loaders/web/cheerio";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import { MemoryVectorStore } from "langchain/vectorstores/memory";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 
 function createCustomPrompt(userProfile: UserProfile) {
   return `
   Sen bir yapay zeka sosyal medya içerik üreticisisin. 
   Görevin, verilen bir konu, tarih, etkinlik veya anahtar kelimeye dayalı olarak sosyal medya platformlarında paylaşılabilir yaratıcı içerikler oluşturmaktır.
+  {context}
 
   İçerik oluştururken aşağıdaki kurallara uymalısın:
 
@@ -32,25 +41,25 @@ function createCustomPrompt(userProfile: UserProfile) {
     - İçerik Twitter, Instagram, Facebook ve LinkedIn gibi farklı platformlara uygun olacak şekilde kısa, etkili ve net olmalıdır.
   
   Format:
-    {
+    {{
       "text": "Sosyal medya içeriği",
       "imagePrompt": "Görsel üretimi için prompt"
-    }
+    }}
     Örnekler:
     Girdi: "23 Nisan"
     Çıktı:
-    {
+    {{
       "text": "#23NisanDemek ülkemizin geleceği çocuklarımızı her gün sevmek demektir. Bayramınız kutlu olsun çocuklar. 🎉❤️",
       "imagePrompt": "Renkli giysiler giymiş mutlu çocuklar, Türk bayrakları tutarak parkta oynuyor. Hava parlak ve gökyüzü mavi, arka planda 23 Nisan yazılı bir pankart var. Çocuklar neşeyle dans ediyor ve etrafta balonlar uçuşuyor."
-    }
+    }}
     
     ---
     Girdi: "Dünya Çevre Günü"
     Çıktı:
-    {
+    {{
       "text": "Dünyamız bize emanet! 🌍 Bugün #DünyaÇevreGünü'nde küçük değişikliklerle büyük farklar yaratabiliriz:• Tek kullanımlık plastiklere hayır diyelim • Geri dönüşüme önem verelim• Su tasarrufu yapalım. Siz çevre için bugün ne yapacaksınız? 🌱💚 #SürdürülebilirYaşam #ÇevreDostu",
       "imagePrompt": "Yeşil doğa ile çevrili bir dünya, elinde bitki tutan insanlar, çevreye duyarlı bir atmosfer yaratıyor. Ağaçlar, çiçekler ve temiz bir gökyüzü ile doğal yaşamı simgeleyen öğeler bulunuyor."
-    }
+    }}
   `;
 }
 
@@ -77,7 +86,6 @@ export default defineEventHandler(async (event) => {
   }
 
   const customPrompt = createCustomPrompt(userProfile);
-  console.log(customPrompt);
 
   const geminiModel = new ChatGoogleGenerativeAI({
     modelName: "gemini-1.5-flash-latest",
@@ -99,9 +107,47 @@ export default defineEventHandler(async (event) => {
     geminiResponseFormatter
   );
 
+  const loader = new CheerioWebBaseLoader(
+    userProfile.url || "https://semsyilmaz.com"
+  );
+
+  const rawDocuments = await loader.load();
+
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 500,
+    chunkOverlap: 0,
+  });
+
+  const documents = await splitter.splitDocuments(rawDocuments);
+
+  const embeddings = new GoogleGenerativeAIEmbeddings({
+    apiKey: process.env.GEMINI_API_KEY,
+  });
+
+  const vectorStore = await MemoryVectorStore.fromDocuments(
+    documents,
+    embeddings
+  );
+
+  const retriever = vectorStore.asRetriever();
+
+  const prompt = ChatPromptTemplate.fromTemplate(customPrompt);
+
+  const chain = await createStuffDocumentsChain({
+    llm: geminiModel,
+    prompt,
+  });
+
+  const context = await retriever._getRelevantDocuments(body.content);
+
+  const response = await chain.invoke({
+    messages: [new HumanMessage(`Konu: ${body.content}`)],
+    context,
+  });
+
   const geminiResponse = (await geminiModelWithStructured.invoke([
     new SystemMessage(customPrompt),
-    new HumanMessage(body.content),
+    new HumanMessage(response),
   ])) as { text: string; imagePrompt: string };
 
   // const dalleResponse = await dalleModel.invoke(geminiResponse.imagePrompt);

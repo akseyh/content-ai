@@ -30,6 +30,7 @@ model UserProfile {
   targetAudience   String?
   tone             String?
   brandPersonality String?
+  url              String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }

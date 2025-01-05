@@ -49,6 +49,17 @@
           class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
         />
       </div>
+      <div>
+        <label for="url" class="block text-white text-sm font-medium mb-1"
+          >URL:</label
+        >
+        <input
+          type="text"
+          id="url"
+          v-model="profile.url"
+          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500 bg-gray-700 text-white"
+        />
+      </div>
       <button
         type="submit"
         class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -67,6 +78,7 @@ const profile = ref({
   targetAudience: "",
   tone: "",
   brandPersonality: "",
+  url: "",
 });
 
 onMounted(async () => {
