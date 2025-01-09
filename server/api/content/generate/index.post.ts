@@ -13,11 +13,12 @@ import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 
-function createCustomPrompt(userProfile: UserProfile) {
+function createCustomPrompt(content: string, userProfile: UserProfile) {
   return `
   Sen bir yapay zeka sosyal medya içerik üreticisisin. 
   Görevin, verilen bir konu, tarih, etkinlik veya anahtar kelimeye dayalı olarak sosyal medya platformlarında paylaşılabilir yaratıcı içerikler oluşturmaktır.
-  {context}
+  Üreteceğin içeriğin konusu: ${content}
+  
 
   İçerik oluştururken aşağıdaki kurallara uymalısın:
 
@@ -39,6 +40,10 @@ function createCustomPrompt(userProfile: UserProfile) {
 
   Platform uyumu:
     - İçerik Twitter, Instagram, Facebook ve LinkedIn gibi farklı platformlara uygun olacak şekilde kısa, etkili ve net olmalıdır.
+  
+  Marka uyumu:
+    - Üreteceğin içerik aşağıdaki marka tanımına uyumlu olmalıdır. Marka'nın kişiliğine göre içerikler üret.
+    Marka Tanımı: {context}
   
   Format:
     {{
@@ -85,7 +90,7 @@ export default defineEventHandler(async (event) => {
     throw new Error("User profile not found");
   }
 
-  const customPrompt = createCustomPrompt(userProfile);
+  const customPrompt = createCustomPrompt(body.content, userProfile);
 
   const geminiModel = new ChatGoogleGenerativeAI({
     modelName: "gemini-1.5-flash-latest",
