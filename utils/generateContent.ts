@@ -1,4 +1,4 @@
-export async function generateContent(prompt: string, generateImage = true) {
+export async function generateContent(prompt: string, generateImage = false) {
   const { sub } = await $fetch("/api/token");
 
   if (!sub) throw new Error("Not authenticated");
@@ -10,6 +10,7 @@ export async function generateContent(prompt: string, generateImage = true) {
     method: "POST",
     body: {
       content: prompt,
+      generateImage,
     },
   });
 

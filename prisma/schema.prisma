@@ -34,25 +34,3 @@ model UserProfile {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
-
-model ContentExample {
-  id          String   @id @default(uuid())
-  userId      String
-  topic       String?
-  content     String?
-  performance String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-enum EmojiUsage {
-  HIGH
-  MEDIUM
-  LOW
-}
-
-enum ContentLength {
-  SHORT
-  MEDIUM
-  LONG
-}

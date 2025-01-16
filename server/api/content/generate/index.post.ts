@@ -143,7 +143,9 @@ export default defineEventHandler(async (event) => {
     prompt,
   });
 
-  const context = await retriever._getRelevantDocuments(body.content);
+  const context = await retriever._getRelevantDocuments(
+    "Ne iş yapar? Vizyon ve misyonu nedir? Hangi  sektör? Kurumsal kimliği nedir?"
+  );
 
   const response = await chain.invoke({
     messages: [new HumanMessage(`Konu: ${body.content}`)],
@@ -155,13 +157,16 @@ export default defineEventHandler(async (event) => {
     new HumanMessage(response),
   ])) as { text: string; imagePrompt: string };
 
-  // const dalleResponse = await dalleModel.invoke(geminiResponse.imagePrompt);
+  const dalleResponse =
+    body.generateImage && (await dalleModel.invoke(geminiResponse.imagePrompt));
 
   const fileName = `image-${Date.now()}.png`;
-  // const imageUrl = await saveImage(dalleResponse, fileName);
+  const imageUrl = dalleResponse
+    ? await saveImage(dalleResponse, fileName)
+    : "";
 
   return {
     text: geminiResponse.text,
-    imageUrl: "",
+    imageUrl,
   };
 });
