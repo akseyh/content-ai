@@ -43,7 +43,10 @@ function createCustomPrompt(content: string, userProfile: UserProfile) {
   
   Marka uyumu:
     - Üreteceğin içerik aşağıdaki marka tanımına uyumlu olmalıdır. Marka'nın kişiliğine göre içerikler üret.
-    Marka Tanımı: {context}
+    - İçerikte veya Hashtaglerde marka'nın adından veya sektöründen mutlaka bahset.
+
+  Marka Tanımı: 
+    {context}
   
   Format:
     {{
@@ -119,7 +122,7 @@ export default defineEventHandler(async (event) => {
   const rawDocuments = await loader.load();
 
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 500,
+    chunkSize: 1000,
     chunkOverlap: 0,
   });
 
@@ -144,13 +147,22 @@ export default defineEventHandler(async (event) => {
   });
 
   const context = await retriever._getRelevantDocuments(
-    "Ne iş yapar? Vizyon ve misyonu nedir? Hangi  sektör? Kurumsal kimliği nedir?"
+    `Şirketin/markanın:
+  - Kurumsal iletişim dili ve tonu nasıl?
+  - Değerleri ve ilkeleri neler?
+  - Hedef kitlesiyle nasıl iletişim kuruyor?
+  - Kullandığı anahtar kelimeler ve terminoloji nedir?
+  - Marka kişiliği ve kimliği nasıl yansıtılıyor?
+  - Sosyal medya ve iletişim stratejisi nasıl?`
   );
+  console.log({ context });
 
   const response = await chain.invoke({
     messages: [new HumanMessage(`Konu: ${body.content}`)],
     context,
   });
+
+  console.log(response);
 
   const geminiResponse = (await geminiModelWithStructured.invoke([
     new SystemMessage(customPrompt),

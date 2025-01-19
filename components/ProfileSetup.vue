@@ -74,16 +74,17 @@
 import { ref, onMounted } from "vue";
 
 const profile = ref({
-  industry: "",
-  targetAudience: "",
-  tone: "",
-  brandPersonality: "",
-  url: "",
+  industry: "" as string | null,
+  targetAudience: "" as string | null,
+  tone: "" as string | null,
+  brandPersonality: "" as string | null,
+  url: "" as string | null,
 });
 
 onMounted(async () => {
   try {
     const response = await $fetch(`/api/profile`);
+
     if (response) {
       profile.value = response;
     }
@@ -99,7 +100,7 @@ async function submitProfile() {
       method: "POST",
       body: profile.value,
     });
-    if (response.success) {
+    if (response) {
       alert("Profil başarıyla güncellendi!");
     } else {
       alert("Profil güncellenirken bir hata oluştu.");

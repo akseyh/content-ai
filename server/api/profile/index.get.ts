@@ -3,7 +3,12 @@ import { getToken } from "#auth";
 export default defineEventHandler(async (event) => {
   const token = await getToken({ event });
 
-  if (!token?.sub) return "Not authorized";
+  if (!token?.sub) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Not authorized",
+    });
+  }
 
   try {
     const profile = await prisma.userProfile.findUnique({

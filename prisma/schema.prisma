@@ -24,7 +24,7 @@ model Content {
 }
 
 model UserProfile {
-  id               String   @id @default(uuid())
+  id               Int      @id @default(autoincrement())
   userId           String   @unique
   industry         String?
   targetAudience   String?
@@ -33,4 +33,16 @@ model UserProfile {
   url              String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model ContentCalendar {
+  id          Int       @id @default(autoincrement())
+  date        DateTime
+  dateTo      DateTime?
+  name        String
+  description String?
+  category    String?
+  isActive    Boolean
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
 }

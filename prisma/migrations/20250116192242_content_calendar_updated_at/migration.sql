@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ContentCalendar" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;

@@ -21,6 +21,14 @@
         </li>
         <li>
           <button
+            @click="navigateTo('/content-calendar')"
+            class="text-gray-300 hover:text-white"
+          >
+            Önemli Günler
+          </button>
+        </li>
+        <li>
+          <button
             @click="navigateTo('/history')"
             class="text-gray-300 hover:text-white"
           >
