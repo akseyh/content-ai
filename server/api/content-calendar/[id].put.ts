@@ -4,7 +4,12 @@ import prisma from "~/server/utils/prisma";
 export default defineEventHandler(async (event) => {
   const token = await getToken({ event });
 
-  if (!token) return "Not authorized";
+  if (!token) {
+    throw createError({
+      statusCode: 401 as number,
+      message: "Yetkilendirme hatası",
+    });
+  }
 
   const contentCalendarId = getRouterParam(event, "id");
   const body = await readBody(event);
@@ -22,8 +27,8 @@ export default defineEventHandler(async (event) => {
         id: Number(contentCalendarId),
       },
       data: {
-        date: body.date,
-        dateTo: body.dateTo,
+        date: new Date(body.date),
+        dateTo: new Date(body.dateTo),
         name: body.name,
         description: body.description,
         category: body.category,

@@ -64,7 +64,6 @@
                 type="text"
                 id="category"
                 v-model="form.category"
-                required
                 class="mt-1 block w-full rounded-md border border-gray-600 bg-gray-700 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm placeholder-gray-400 hover:bg-gray-600 transition-colors duration-200 py-2.5 px-4"
               />
             </div>
@@ -218,21 +217,20 @@ const form = ref({
 });
 
 onMounted(async () => {
-  const { data } = await useFetch<ContentCalendar[]>(`/api/content-calendar`);
-  if (data.value && Array.isArray(data.value)) {
-    const calendar = data.value.find((item: any) => item.id === calendarId);
-    if (calendar) {
-      form.value = {
-        name: calendar.name,
-        date: new Date(calendar.date).toISOString().split("T")[0],
-        dateTo: calendar.dateTo
-          ? new Date(calendar.dateTo).toISOString().split("T")[0]
-          : "",
-        category: calendar.category,
-        description: calendar.description,
-        isActive: calendar.isActive,
-      };
-    }
+  const { data } = await useFetch<ContentCalendar>(
+    `/api/content-calendar/${calendarId}`
+  );
+  if (data.value) {
+    form.value = {
+      name: data.value.name,
+      date: new Date(data.value.date).toISOString().split("T")[0],
+      dateTo: data.value.dateTo
+        ? new Date(data.value.dateTo).toISOString().split("T")[0]
+        : "",
+      category: data.value.category,
+      description: data.value.description,
+      isActive: data.value.isActive,
+    };
   }
 });
 
