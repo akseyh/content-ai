@@ -10,12 +10,13 @@ const err = ref(false);
 const loading = ref(false);
 const showSuggestion = ref(false);
 const contentSuggestion = ref<string | null>(null);
+const generateImage = ref<boolean>(false);
 
 async function onSubmit(values: any) {
   try {
     loading.value = true;
 
-    const response = await generateContent(values.input, true);
+    const response = await generateContent(values.input, generateImage.value);
 
     loading.value = false;
 
@@ -63,6 +64,11 @@ async function fetchContentSuggestion() {
           placeholder="İçeriğin konusu hakkında bilgi verin"
         />
         <ErrorMessage name="input" class="text-red-500" />
+      </div>
+
+      <div class="flex items-center gap-x-2 text-white">
+        <UToggle v-model="generateImage" color="primary" size="sm" />
+        <span class="text-sm font-medium">Resim Üret</span>
       </div>
 
       <div class="flex gap-x-2">
