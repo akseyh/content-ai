@@ -85,12 +85,20 @@ export default defineEventHandler(async (event) => {
 
   const token = await getToken({ event });
 
-  if (!token?.sub) return "Not authorized";
+  if (!token?.sub) {
+    throw createError({
+      statusCode: 401,
+      message: "Yetkilendirme gerekli",
+    });
+  }
 
   // Kullanıcı profilini ve örnekleri veritabanından al
   const userProfile = await getUserProfile(token.sub);
   if (!userProfile) {
-    throw new Error("User profile not found");
+    throw createError({
+      statusCode: 401,
+      message: "User profile not found",
+    });
   }
 
   const customPrompt = createCustomPrompt(body.content, userProfile);
@@ -155,14 +163,11 @@ export default defineEventHandler(async (event) => {
   - Marka kişiliği ve kimliği nasıl yansıtılıyor?
   - Sosyal medya ve iletişim stratejisi nasıl?`
   );
-  console.log({ context });
 
   const response = await chain.invoke({
     messages: [new HumanMessage(`Konu: ${body.content}`)],
     context,
   });
-
-  console.log(response);
 
   const geminiResponse = (await geminiModelWithStructured.invoke([
     new SystemMessage(customPrompt),

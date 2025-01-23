@@ -36,7 +36,6 @@ export default defineEventHandler(async (event) => {
   try {
     const contentCalendars = await prisma.contentCalendar.findMany();
     const customPrompt = createCustomPrompt(contentCalendars);
-    console.log(customPrompt);
 
     const geminiModel = new ChatGoogleGenerativeAI({
       modelName: "gemini-1.5-flash-latest",
