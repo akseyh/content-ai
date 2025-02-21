@@ -17,8 +17,8 @@ FROM node:18-alpine
 WORKDIR /usr/src/ app
 
 # Sadece gerekli dosyaları kopyala
-COPY --from=builder /usr/src/app/.output /usr/src/app/.output
-COPY --from=builder /usr/src/app/.env /usr/src/app/.env
+COPY --from=builder /usr/src/app/.output /usr/src/app/content-ai/.output
+COPY --from=builder /usr/src/app/.env /usr/src/app/content-ai/.env
 
 ENV HOST=0.0.0.0
 ENV PORT=3000
