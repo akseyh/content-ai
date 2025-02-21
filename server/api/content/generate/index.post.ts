@@ -80,6 +80,16 @@ async function getUserProfile(userId: string) {
   return profile;
 }
 
+async function generateImage(prompt: string): Promise<string> {
+  const dalleModel = new DallEAPIWrapper({
+    model: "dall-e-3",
+    size: "1024x1024",
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
+  return dalleModel.invoke(prompt);
+}
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
@@ -108,11 +118,7 @@ export default defineEventHandler(async (event) => {
     maxOutputTokens: 2048,
     apiKey: process.env.GEMINI_API_KEY,
   });
-  const dalleModel = new DallEAPIWrapper({
-    model: "dall-e-3",
-    size: "1024x1024",
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+  
 
   const geminiResponseFormatter = z.object({
     text: z.string(),
@@ -174,16 +180,8 @@ export default defineEventHandler(async (event) => {
     new HumanMessage(response),
   ])) as { text: string; imagePrompt: string };
 
-  const dalleResponse =
-    body.generateImage && (await dalleModel.invoke(geminiResponse.imagePrompt));
-
-  const fileName = `image-${Date.now()}.png`;
-  const imageUrl = dalleResponse
-    ? await saveImage(dalleResponse, fileName)
-    : "";
-
   return {
     text: geminiResponse.text,
-    imageUrl,
+    imageUrl: "",
   };
 });

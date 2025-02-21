@@ -67,8 +67,12 @@ async function fetchContentSuggestion() {
       </div>
 
       <div class="flex items-center gap-x-2 text-white">
-        <UToggle v-model="generateImage" color="primary" size="sm" />
-        <span class="text-sm font-medium">Resim Üret</span>
+        <UTooltip text="Yakında">
+          <div class="flex items-center gap-x-2">
+            <UToggle v-model="generateImage" color="primary" size="sm" disabled />
+            <span class="text-sm font-medium">Resim Üret</span>
+          </div>
+        </UTooltip>
       </div>
 
       <div class="flex gap-x-2">
