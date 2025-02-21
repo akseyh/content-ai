@@ -8,7 +8,7 @@ services:
     container_name: content-ai-prod
     restart: always
     ports:
-      - "3000:3000"
+      - "80:3000"
     environment:
       - NODE_ENV=production
       - NUXT_HOST=0.0.0.0
