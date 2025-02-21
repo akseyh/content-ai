@@ -10,6 +10,11 @@ COPY package*.json ./
 # Bağımlılıkları yükle
 RUN npm install
 
+RUN npm run build
+
+RUN npm run prisma:generate
+RUN npm run prisma:push
+
 # Proje dosyalarını kopyala
 COPY . .
 
