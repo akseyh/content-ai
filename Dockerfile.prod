@@ -10,7 +10,6 @@ COPY . .
 RUN npm run build
 
 RUN npm run prisma:generate
-RUN npm run prisma:push
 
 # Production stage
 FROM node:18-alpine
@@ -24,6 +23,8 @@ COPY --from=builder /usr/src/app/.env /usr/src/app/.env
 ENV HOST=0.0.0.0
 ENV PORT=3000
 ENV NODE_ENV=production
+
+RUN npm run prisma:push
 
 EXPOSE 3000
 
