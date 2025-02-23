@@ -7,25 +7,35 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+
+# Prisma generate işlemini build'den önce çalıştır
+RUN npm run prisma:generate
+
+# Production build öncesi build çıktılarını temizle
+RUN rm -rf .output
+
+# Production build
 RUN npm run build
 
-RUN npm run prisma:generate
+# Build çıktısını kontrol et
+RUN ls -la .output/server/
 
 # Production stage
 FROM node:18-alpine
 
-WORKDIR /usr/src/ app
+WORKDIR /usr/src/app
 
-# Sadece gerekli dosyaları kopyala
-COPY --from=builder /usr/src/app/.output /usr/src/app/content-ai/.output
-COPY --from=builder /usr/src/app/.env /usr/src/app/content-ai/.env
+# Gerekli dosyaları kopyala
+COPY --from=builder /usr/src/app/.output ./.output
+COPY --from=builder /usr/src/app/prisma ./prisma
+COPY --from=builder /usr/src/app/package*.json ./
+COPY --from=builder /usr/src/app/node_modules ./node_modules
 
 ENV HOST=0.0.0.0
 ENV PORT=3000
 ENV NODE_ENV=production
 
-RUN npm run prisma:push
-
 EXPOSE 3000
 
-CMD ["node", ".output/server/index.mjs"] 
+# Kontrol için ls komutunu ekleyelim
+CMD ["sh", "-c", "ls -la .output/server/ && npx prisma db push && node .output/server/index.mjs"]
